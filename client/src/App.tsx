@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { Layout, Alert, Spin, Switch } from 'antd';
+import { Layout, Alert, Spin, Switch, Card,Table } from 'antd';
 
 const {useState, useEffect } = React;
 
@@ -25,7 +25,7 @@ function App() {
       })
       .then((actualData) => {
         setError(null);
-        setTodos(actualData);
+        setTodos(actualData.todos);
         console.log(actualData)
       })
       .catch((err) => {
@@ -35,19 +35,27 @@ function App() {
       });
   }, []);
 
+  let columns =  [ 
+    {
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
+    }, 
+  ];
   return (
     <Layout>
       <Layout.Header>
         Header
       </Layout.Header>
       <Layout.Content>
-        <Spin spinning={loading}>
-          <Alert
-            message="Loading TODOs..."
-            description="Requesting data from the server..."
-            type="info"
-          />
-        </Spin>
+        <Card title="TODOs">
+          <Spin spinning={loading}>
+            {error && <Alert message={error} type="error" />}
+            {loading && <Alert message="Loading TODOs..." description="Requesting data from the server..." type="info" />}
+          </Spin>
+          <Table columns={columns} dataSource={todos}>
+          </Table>
+        </Card>
       </Layout.Content>
       <Layout.Footer>
         Built with an LLM.
