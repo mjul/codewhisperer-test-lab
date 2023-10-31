@@ -12,3 +12,4 @@ To give CW a skeleton to infer from, I created the client application with `crea
 
     npx create-react-app client --template typescript
 
+I also added the Ant Design component library, `npm install antd --save`.
