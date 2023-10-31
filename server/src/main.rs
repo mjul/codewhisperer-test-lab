@@ -21,6 +21,10 @@ struct TodoList {
 
 
 async fn get_todos() -> Result<Json<TodoList>, StatusCode> {
+    // Get the TODOs from SQLite
+    // Return them as a JSON object
+    
+    
     let todos = vec![
         Todo {
             id: 1,
@@ -40,13 +44,29 @@ async fn get_todos() -> Result<Json<TodoList>, StatusCode> {
 
 fn create_app() -> Router {
     Router::new()
-        .route("/", get(get_todos))
+        .route("/api/todos", get(get_todos))
 }
 
 
 #[tokio::main]
 async fn main() {
     let app = create_app();
-    Server::bind(&"0.0.0.0:3003".parse().unwrap())
+
+    // Initialize tracing
+    let default_collector = tracing_subscriber::fmt()
+        .with_env_filter("info,tower_http=debug,server=debug")
+        // build but do not install the subscriber.
+        .finish();
+    tracing::subscriber::set_global_default(default_collector)
+        .expect("setting default subscriber failed");
+
+    // add and turn on logging
+    let app = app.layer(tower_http::trace::TraceLayer::new_for_http());
+    //tracing_subscriber::fmt::init();
+
+    // start the server
+    let addr = "0.0.0.0:3003".parse().unwrap();
+    tracing::info!("Starting server on {}", addr);
+    Server::bind(&addr)
         .serve(app.into_make_service()).await.unwrap();
 }
