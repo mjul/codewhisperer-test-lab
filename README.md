@@ -25,5 +25,5 @@ You can run the client in development mode like this:
 The development environment is set up to proxy to the Rust backend, see https://create-react-app.dev/docs/proxying-api-requests-in-development
 The corresponding line is the `"proxy"` key in `package.json`.
 
-
-
+## Evaluation
+CodeWhisperer in its current version feels limited and less useful than e.g. GitHub Copilot or Cody AI.
